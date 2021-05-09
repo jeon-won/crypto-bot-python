@@ -71,7 +71,7 @@ def get_message(tickers):
     """슬랙 메시지 생성"""
     msg = ""
     if(len(tickers) != 0):
-        msg += "매수 각인 코인: "
+        msg += "이 코인 심상치 않다?! "
         for ticker in tickers:
             msg += ticker.replace("KRW-", "") + " "
     return msg

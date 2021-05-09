@@ -20,13 +20,13 @@ K = 0.5                                # 변동폭 계산에 사용되는 값
 #############  함수  ###########################################################################
 def get_target_price(ticker, interval, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
-    df = pyupbit.get_ohlcv(ticker, interval=INTERVAL, count=2)
+    df = pyupbit.get_ohlcv(ticker, interval=interval, count=2)
     target_price = df.iloc[0]['close'] + (df.iloc[0]['high'] - df.iloc[0]['low']) * k
     return target_price
 
 def get_ma(ticker, interval, count):
     """이동 평균선 조회 (count: 일 수)"""
-    df = pyupbit.get_ohlcv(ticker, interval=INTERVAL, count=count)
+    df = pyupbit.get_ohlcv(ticker, interval=interval, count=count)
     ma = df['close'].rolling(count).mean().iloc[-1]
     return ma
 
@@ -101,8 +101,7 @@ while True:
                         coinLogger.info(f"========== KRW {krw}원에 코인을 매수합니다. ==========")
                         coinLogger.info(upbit.buy_market_order(COIN_TICKER, krw))
                         coinLogger.info("========== 코인 매수 완료 ==========")
-            
-
+        
         time.sleep(5)
 
     except Exception as e:

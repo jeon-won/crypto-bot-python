@@ -5,15 +5,15 @@ import requests
 
 
 #############  상수  ##########################################################################
-SLACK_OAUTH_TOKEN = "mYsLaCkOaUtHtOkEn"    # Slack OAuth Token
-INTERVAL = "minute60"                      # 1시간 차트 조사
+SLACK_OAUTH_TOKEN = "mYsLaCkOaUtHtOkEn"
+INTERVAL = "minute60"   # 1시간 차트 조사
 ###############################################################################################
 
 
-#############  변수  ##########################################################################
-coin_tickers = []                          # 업비트에서 거래 가능한 코인 목록
-tickers_to_buy = []                        # 매수 각인 코인 목록
-message = ""                               # Slack 메시지 내용
+#############  변수  ######################################################################
+coin_tickers = []       # 업비트에서 거래 가능한 코인 목록
+tickers_to_buy = []     # 매수 각인 코인 목록
+message = ""            # Slack 메시지 내용
 ###############################################################################################
 
 
@@ -29,6 +29,7 @@ def get_ma(ticker, interval, count):
     """이동 평균선 조회 (count: 일 수)"""
     df = pyupbit.get_ohlcv(ticker, interval=interval, count=count)
     ma = df['close'].rolling(count).mean().iloc[-1]
+    time.sleep(0.1) # 초당 API 호출 허용 수가 정해져 있어서 쉬엄쉬엄 해줘야 함...
     return ma
 
 def get_prev_ma(ticker, interval, count):
@@ -36,6 +37,7 @@ def get_prev_ma(ticker, interval, count):
     df = pyupbit.get_ohlcv(ticker, interval=interval, count=count+1)
     prev_df = df.drop(df.index[len(df)-1])
     prev_ma = prev_df['close'].rolling(count).mean().iloc[-1]
+    time.sleep(0.1)
     return prev_ma
 
 def get_coin_tickers():
@@ -44,27 +46,26 @@ def get_coin_tickers():
     for ticker in pyupbit.get_tickers():
         if(ticker[0:3] == "KRW"):
             tickers.append(ticker)
+            time.sleep(0.1)
     return tickers
 
 def find_coin(tickers):
     """매수 각인 코인 찾기"""
     buy_list = []
+
     for ticker in tickers:
-        ma7 = get_ma(ticker, INTERVAL, 7)
-        time.sleep(0.1) # 초당 API 호출 허용 수가 정해져 있어서 쉬엄쉬엄 해줘야 함...
+        ma7 = get_ma(ticker, INTERVAL, 7)  
         ma15 = get_ma(ticker, INTERVAL, 15)
-        time.sleep(0.1)
         prev_ma7 = get_prev_ma(ticker, INTERVAL, 7)
-        time.sleep(0.1)
         prev_ma15 = get_prev_ma(ticker, INTERVAL, 15)
-        time.sleep(0.1)
+
         # (대부분 애매하긴 하지만...) 7 - 15일 이평선이 골든크로스로 변하고
         if((prev_ma7 < prev_ma15) and (ma7 > ma15)):
             ma50 = get_ma(ticker, INTERVAL, 50)
-            time.sleep(0.1)
-            # 7 - 5 - 50일 이평선이 정배열인 경우 매수 각으로 판단
+            # 7 - 5 - 50일 이평선이 정배열인 경우 심상치 않은(?) 코인으로 간주
             if(ma15 > ma50):
                 buy_list.append(ticker)
+        
     return buy_list
 
 def get_message(tickers):

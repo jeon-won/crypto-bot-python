@@ -10,5 +10,5 @@
 ## AutoPush.py
 심상치 않은(?) 가상화폐를 슬랙(Slack) 메시지로 알려주는 파이썬 코드
 
-## AutoTrada.py
+## AutoTrade.py
 변동성 돌파 전략을 사용하여 가상화폐를 자동 거래하는 파이썬 코드

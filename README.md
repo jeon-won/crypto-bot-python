@@ -19,5 +19,5 @@
 ## cryptofunc.py
 업비트 가상화폐 관련 정보를 얻어오기 위한 함수를 모아놓은 모듈
 
-## MultiTradingView.py
+## MultiTradingView.html
 바이낸스 BTCUSDT 1분, 5분, 15분, 1시간, 4시간 및 1일 차트와 KIMPGA 사이트를 한 화면에 보여주는 HTML. 웹 브라우저로 실행하거나 웹 서버에 업로드하여 사용.

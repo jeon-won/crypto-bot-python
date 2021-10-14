@@ -40,5 +40,5 @@
 * 바이낸스 현물 4분할 차트: https://www.binance.com/en/trade/multipleChart?layout=pro&type=four
 * 바이낸스 현물 6분할 차트: https://www.binance.com/en/trade/multipleChart?layout=pro&type=six
 * 바이낸스 선물 2분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=two
-* 바이낸스 선물 2분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=six
-* 바이낸스 선물 2분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=six
+* 바이낸스 선물 4분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=six
+* 바이낸스 선물 6분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=six

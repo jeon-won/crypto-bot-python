@@ -7,7 +7,7 @@
 
 ## 사용한 주요 라이브러리
 * pyupbit: 업비트 API를 편하게 사용하기 위한 라이브러리
-* ccxt: 바이낸스 API를 편하게 사용하기 위한 라이브러리
+* ccxt: 바이낸스 및 업비트 API를 편하게 사용하기 위한 라이브러리
 * python-telegram-bot: 텔레그램 메시지 전송을 위한 라이브러리
 * numpy: 배열 처리를 쉽게 하기 위한 라이브러리
 
@@ -21,6 +21,12 @@
 
 ### detect_bb_upbit.py
 업비트 차트의 현재가가 볼린저 밴드 하단을 터치하는 캔들 발생 시 텔레그램 메시지 전송
+
+### detect_ma_binance.py
+바이낸스 차트의 이동평균선이 골든(데드)크로스로 변했을 때 텔레그램 메시지 전송
+
+### detect_ma_upbit.py
+업비트 차트의 이동평균선이 골든크로스로 변했을 때 텔레그램 메시지 전송
 
 ### detect_vol_binance.py
 바이낸스 차트 거래량이 평소보다 늘어났다고 판단했을 때 텔레그램 메시지 전송
@@ -40,5 +46,5 @@
 * 바이낸스 현물 4분할 차트: https://www.binance.com/en/trade/multipleChart?layout=pro&type=four
 * 바이낸스 현물 6분할 차트: https://www.binance.com/en/trade/multipleChart?layout=pro&type=six
 * 바이낸스 선물 2분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=two
-* 바이낸스 선물 4분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=six
-* 바이낸스 선물 6분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=six
+* 바이낸스 선물 2분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=six
+* 바이낸스 선물 2분할 차트: https://www.binance.com/en/futures/multipleChart?layout=pro&type=six

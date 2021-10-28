@@ -1,11 +1,7 @@
 import pyupbit
-import time
+import ccxt
 import requests
-
-SLEEP_TIME = 0 # 업비트 API 호출 제한시간이 있어서 잠깐 쉬는 시간(초)
-URL = "https://api.upbit.com/v1/ticker"
-HEADERS = {"Accept": "application/json"}
-
+import numpy as np
 
 def get_krw_tickers():
     """업비트에서 한화로 거래 가능한 코인을 조회합니다.
@@ -28,70 +24,77 @@ def get_current_price(ticker):
     Returns: float
     """
     current_price = pyupbit.get_orderbook(tickers=ticker)[0]["orderbook_units"][0]["ask_price"]
-    time.sleep(SLEEP_TIME)
     return current_price
 
 def get_ma(ticker, interval, count):
-    """이동 평균을 조회합니다.
+    """현재 이동 평균을 조회합니다.
 
     Args: 
-        ticker: ticker (예: "KRW-BTC")
-        interval: 몇분 봉? (예: "minute5", "minute15" 등)
+        ticker: ticker (예: "BTC/USDT")
+        interval: 몇분 봉? (예: "5m", "15m" 등)
         count: 이동평균선 기간  (예: 5, 20, 60, 120 등)
     
     Returns: numpy.float64
     """
-    df = pyupbit.get_ohlcv(ticker, interval, count)
-    ma = df['close'].rolling(count).mean().iloc[-1]
-    time.sleep(SLEEP_TIME)
-    return ma
+    binance = ccxt.upbit()
+    ohlcvs = binance.fetch_ohlcv(ticker, interval, limit=count)
+    ohlcvs_np = np.array([])
 
-def get_prev_ma(ticker, interval, count):
-    """직전 이동 평균을 조회합니다.
+    for ohlcv in ohlcvs:
+        ohlcvs_np = np.append(ohlcvs_np, ohlcv[4])
+    
+    return ohlcvs_np.mean()
+
+def get_prev_ma(ticker, interval, count, before):
+    """과거 이동 평균을 조회합니다.
 
     Args: 
-        ticker: ticker (예: "KRW-BTC")
-        interval: 몇분 봉? (예: "minute5", "minute15" 등)
+        ticker: ticker (예: "BTC/USDT")
+        interval: 몇분 봉? (예: "5m", "15m" 등)
         count: 이동평균선 기간  (예: 5, 20, 60, 120 등)
+        before: 며칠 전 이동평균을 구할 것인지? (예: 1, 2, ... )
     
     Returns: numpy.float64
     """
-    df = pyupbit.get_ohlcv(ticker, interval=interval, count=count+1)
-    prev_df = df.drop(df.index[len(df)-1])
-    prev_ma = prev_df['close'].rolling(count).mean().iloc[-1]
-    time.sleep(SLEEP_TIME)
-    return prev_ma
 
-def get_ema(ticker, interval, count):
-    """지수 이동 평균을 조회합니다.
+    binance = ccxt.upbit()
+    ohlcvs = binance.fetch_ohlcv(ticker, interval, limit=count+before)
+    _ohlcvs = ohlcvs[:len(ohlcvs)-before]
+    ohlcvs_np = np.array([])
 
-    Args: 
-        ticker: ticker (예: "KRW-BTC")
-        interval: 몇분 봉? (예: "minute5", "minute15" 등)
-        count: 이동평균선 기간  (예: 5, 20, 60, 120 등)
+    for ohlcv in _ohlcvs:
+        ohlcvs_np = np.append(ohlcvs_np, ohlcv[4])
     
-    Returns: numpy.float64
-    """
-    df = pyupbit.get_ohlcv(ticker, interval, count)
-    ma = df['close'].ewm(span=count).mean().iloc[-1]
-    time.sleep(SLEEP_TIME)
-    return ma
+    return ohlcvs_np.mean()
 
-def get_prev_ema(ticker, interval, count):
-    """직전 지수 이동 평균을 조회합니다.
+# def get_ema(ticker, interval, count):
+#     """지수 이동 평균을 조회합니다.
 
-    Args: 
-        ticker: ticker (예: "KRW-BTC")
-        interval: 몇분 봉? (예: "minute5", "minute15" 등)
-        count: 이동평균선 기간  (예: 5, 20, 60, 120 등)
+#     Args: 
+#         ticker: ticker (예: "KRW-BTC")
+#         interval: 몇분 봉? (예: "minute5", "minute15" 등)
+#         count: 이동평균선 기간  (예: 5, 20, 60, 120 등)
     
-    Returns: numpy.float64
-    """
-    df = pyupbit.get_ohlcv(ticker, interval=interval, count=count+1)
-    prev_df = df.drop(df.index[len(df)-1])
-    prev_ma = prev_df['close'].ewm(span=count).mean().iloc[-1]
-    time.sleep(SLEEP_TIME)
-    return prev_ma
+#     Returns: numpy.float64
+#     """
+#     df = pyupbit.get_ohlcv(ticker, interval, count)
+#     ma = df['close'].ewm(span=count).mean().iloc[-1]
+#     return ma
+
+# def get_prev_ema(ticker, interval, count):
+#     """직전 지수 이동 평균을 조회합니다.
+
+#     Args: 
+#         ticker: ticker (예: "KRW-BTC")
+#         interval: 몇분 봉? (예: "minute5", "minute15" 등)
+#         count: 이동평균선 기간  (예: 5, 20, 60, 120 등)
+    
+#     Returns: numpy.float64
+#     """
+#     df = pyupbit.get_ohlcv(ticker, interval=interval, count=count+1)
+#     prev_df = df.drop(df.index[len(df)-1])
+#     prev_ma = prev_df['close'].ewm(span=count).mean().iloc[-1]
+#     return prev_ma
 
 def get_stoch_k(ticker, interval, count):
     """스토캐스틱(Stochastic)에서 사용되는 %K 값을 계산합니다.
@@ -104,7 +107,6 @@ def get_stoch_k(ticker, interval, count):
     Returns: numpy.float64
     """
     df = pyupbit.get_ohlcv(ticker, interval, count)
-    time.sleep(SLEEP_TIME)
 
     prices = []
     prices.append(df.min()['open'])
@@ -119,7 +121,6 @@ def get_stoch_k(ticker, interval, count):
     wave_min = min(prices)                     # 파동의 최저가격
     wave_max = max(prices) - min(prices)       # 파동의 전체 폭
     current_price = get_current_price(ticker)  # 현재 가격
-    time.sleep(SLEEP_TIME)
     
     stoch_k = (current_price - wave_min) / wave_max
     return stoch_k
@@ -136,13 +137,11 @@ def get_bb(ticker, interval, count, multiplier):
     Returns: dict
     """
     df = pyupbit.get_ohlcv(ticker, interval, count)
-    time.sleep(SLEEP_TIME)
     
     std = df.std()['close']                # 종가 기준 표준편차
     mbb = get_ma(ticker, interval, count)  # 중심선 = 기간 내 이동평균선(저항자리)
     ubb = mbb + std * multiplier           # 상한선 = 중심선 + 기간 내 표준편차 * 승수
     lbb = mbb - std * multiplier           # 하한선 = 중신선 + 기간 내 표준편차 * 승수
-    time.sleep(SLEEP_TIME)
     
     dict_bb = {}
     dict_bb["mbb"] = mbb
@@ -153,7 +152,7 @@ def get_bb(ticker, interval, count, multiplier):
 # def get_fall_rate(ticker, interval, count):
 #     """최근 차트 감소율 계산"""
 #     df = pyupbit.get_ohlcv(ticker, interval, count)
-#     time.sleep(SLEEP_TIME)
+#
 #     df_open = df["open"].to_list()
 #     df_close = df["close"].to_list()
 #     wave_max = max(df_open[count-1], df_close[count-1])
@@ -176,22 +175,26 @@ def get_vol_top_tickers(top_num=0):
     Returns: list (잘못된 매개변수를 입력한 경우 None)
     """
 
+    # 업비트에서 KRW로 거래 가능한 tickers 얻어오기
     tickers = ""
     for item in get_krw_tickers():
         tickers += f"{item},"
     tickers = tickers[:-1] # 마지막 문자열(쉼표) 자르기
 
+    # tickers의 데이터를 얻어온 후 최근 24시간 내 거래량이 높은 순으로 정렬
+    url = "https://api.upbit.com/v1/ticker"
+    headers = {"Accept": "application/json"}
     query = { 'markets': tickers }
-    response = requests.request("GET", URL, headers=HEADERS, params=query)
+    response = requests.request("GET", url, headers=headers, params=query)
     sorted_data = sorted(response.json(), key=(lambda x: x['acc_trade_price_24h']), reverse=True)
 
+    # tickers의 데이터 중 거래량 상위 tickers의 list 반환
     sorted_tickers = []
     for item in sorted_data:
         sorted_tickers.append(item['market'])
-
-    if(top_num == 0):
+    if(top_num == 0): # 매개변수 값이 0이면 모든 tickers List 반환
         return sorted_tickers
-    elif(top_num > 0):
+    elif(top_num > 0): # 매개변수 값이 0 초과 시 상위 ticker List 반환
         return sorted_tickers[:top_num]
-    else:
+    else: # 매개변수 값이 적절치 않으면 None 반환
         return

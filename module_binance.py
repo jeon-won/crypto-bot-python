@@ -1,5 +1,48 @@
 import ccxt
-import numpy
+import numpy as np
+
+def get_ma(ticker, interval, count):
+    """현재 이동 평균을 조회합니다.
+
+    Args: 
+        ticker: ticker (예: "BTC/USDT")
+        interval: 몇분 봉? (예: "5m", "15m" 등)
+        count: 이동평균선 기간  (예: 5, 20, 60, 120 등)
+    
+    Returns: numpy.float64
+    """
+    binance = ccxt.binance()
+    ohlcvs = binance.fetch_ohlcv(ticker, interval, limit=count)
+    ohlcvs_np = np.array([])
+
+    for ohlcv in ohlcvs:
+        ohlcvs_np = np.append(ohlcvs_np, ohlcv[4])
+    
+    return ohlcvs_np.mean()
+
+
+def get_prev_ma(ticker, interval, count, before):
+    """과거 이동 평균을 조회합니다.
+
+    Args: 
+        ticker: ticker (예: "BTC/USDT")
+        interval: 몇분 봉? (예: "5m", "15m" 등)
+        count: 이동평균선 기간  (예: 5, 20, 60, 120 등)
+        before: 며칠 전 이동평균을 구할 것인지? (예: 1, 2, ... )
+    
+    Returns: numpy.float64
+    """
+
+    binance = ccxt.binance()
+    ohlcvs = binance.fetch_ohlcv(ticker, interval, limit=count+before)
+    _ohlcvs = ohlcvs[:len(ohlcvs)-before]
+    ohlcvs_np = np.array([])
+
+    for ohlcv in _ohlcvs:
+        ohlcvs_np = np.append(ohlcvs_np, ohlcv[4])
+    
+    return ohlcvs_np.mean()
+
 
 def get_bb(ticker, interval, count, multipler):
     """볼린저 밴드에 사용되는 값(중심선, 상한선, 하한선)을 계산합니다.
@@ -25,8 +68,8 @@ def get_bb(ticker, interval, count, multipler):
     current = ticker['close'] # 현재가
     list_close.append(current)
 
-    std = numpy.std(list_close)      # 표준편차(종가 기준)
-    mbb = numpy.average(list_close)  # 볼린저 밴드의 중심선(이동평균)
+    std = np.std(list_close)      # 표준편차(종가 기준)
+    mbb = np.average(list_close)  # 볼린저 밴드의 중심선(이동평균)
     ubb = mbb + std * multipler      # 상한선 = 중심선 + 기간 내 표준편차 * 승수
     lbb = mbb - std * multipler      # 하한선 = 중신선 + 기간 내 표준편차 * 승수
 

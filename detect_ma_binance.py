@@ -20,7 +20,7 @@ detect_ma_binance.py
 MIN = int(sys.argv[1])  # 몇분 봉인가?
 INTERVAL = f"{MIN}m"    # 차트 종류
 TELEGRAM_TOKEN = "tElEgRaMtOkEn"  # 텔레그렘 봇 토큰
-TELEGRAM_CHAT_ID = 1234567890     # 텔레그램 봇 아이디
+TELEGRAM_CHAT_ID = 123456789      # 텔레그램 봇 아이디
 #############################################
 
 ##### 변수 ##################################
@@ -41,31 +41,23 @@ while(True):
 
                 # 2일 전 골든(데드)크로스 여부 판별
                 ma5_2 = get_prev_ma("BTC/USDT", INTERVAL, 5, 2)
-                ma10_2 = get_prev_ma("BTC/USDT", INTERVAL, 10, 2)
-                ma15_2 = get_prev_ma("BTC/USDT", INTERVAL, 15, 2)
                 ma25_2 = get_prev_ma("BTC/USDT", INTERVAL, 25, 2)
-                if(ma5_2 > ma10_2 > ma15_2 > ma25_2 or ma5_2 < ma10_2 < ma15_2 < ma25_2):
+                if(ma5_2 > ma25_2 or ma5_2 < ma25_2):
                     is_cross_2 = True
 
                 # 1일 전 골든(데드)크로스 여부 판별
                 ma5_1 = get_prev_ma("BTC/USDT", INTERVAL, 5, 1)
-                ma10_1 = get_prev_ma("BTC/USDT", INTERVAL, 10, 1)
-                ma15_1 = get_prev_ma("BTC/USDT", INTERVAL, 15, 1)
                 ma25_1 = get_prev_ma("BTC/USDT", INTERVAL, 25, 1)
-                if(ma5_1 > ma10_1 > ma15_1 > ma25_1 or ma5_1 < ma10_1 < ma15_1 < ma25_1):
+                if(ma5_1 > ma25_1 or ma5_1 < ma25_1):
                     is_cross_1 = True
-
-                print(now)
-                print(ma5_2, ma10_2, ma15_2, ma25_2, is_cross_2)
-                print(ma5_1, ma10_1, ma15_1, ma25_1, is_cross_1)
 
                 # 2일 전 -> 1일 전 골든(데드)크로스 전환되면 텔레그램 메시지 전송
                 if(is_cross_2 == False and is_cross_1 == True):
-                    if(ma5_1 > ma10_1 > ma15_1 > ma25_1):
+                    if(ma5_1 > ma25_1):
                         message = f"Binance {ticker} {MIN}분봉 골든크로스 전환"
                         bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
                         print(message)
-                    if(ma5_1 < ma10_1 < ma15_1 < ma25_1):
+                    if(ma5_1 < ma25_1):
                         message = f"Binance {ticker} {MIN}분봉 데드크로스 전환"
                         bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
                         print(message)

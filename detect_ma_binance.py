@@ -1,4 +1,4 @@
-from module_binance import get_prev_ma, get_ma
+from module_binance import get_prev_ma
 import telegram
 import sys
 import time
@@ -8,7 +8,7 @@ from datetime import datetime
 detect_ma_binance.py
 * Date: 2021. 10. 28.
 * Author: Jeon Won
-* Func: 5, 10, 15, 25 이동평균선이 골든(데드)크로스로 변하는 순간 텔레그램 메시지 전송
+* Func: 5, 10, 15, 25 이동평균선이 골든(데드)크로스로 변한 순간 텔레그램 메시지 전송
 * Usage: 15분봉 차트 조사 명령어는 `python3 detect_ma_binance.py 15` (3, 5, 15, 30, 60분 봉에만 사용)
 * Strategy: https://youtu.be/og4BhKT6-4U
   - 골든(데드)크로스로 변하는 순간 롱(숏) 포지션 각 잡기
@@ -25,7 +25,7 @@ TELEGRAM_CHAT_ID = 123456789      # 텔레그램 봇 아이디
 
 ##### 변수 ##################################
 bot = telegram.Bot(TELEGRAM_TOKEN)
-tickers = ["BTC/USDT"]
+tickers = ["BTC/USDT", "ETH/USDT", "XRP/USDT"]
 #############################################
 
 while(True):
@@ -40,15 +40,19 @@ while(True):
                 is_cross_2 = False # 1일 전 이평선 골든(데드)크로스 여부 체크
 
                 # 2일 전 골든(데드)크로스 여부 판별
-                ma5_2 = get_prev_ma("BTC/USDT", INTERVAL, 5, 2)
-                ma25_2 = get_prev_ma("BTC/USDT", INTERVAL, 25, 2)
-                if(ma5_2 > ma25_2 or ma5_2 < ma25_2):
+                ma5_2 = get_prev_ma(ticker, INTERVAL, 5, 2)
+                ma10_2 = get_prev_ma(ticker, INTERVAL, 10, 2)
+                ma15_2 = get_prev_ma(ticker, INTERVAL, 15, 2)
+                ma25_2 = get_prev_ma(ticker, INTERVAL, 25, 2)
+                if(ma5_2 > ma10_2 > ma15_2 > ma25_2 or ma5_2 < ma10_2 < ma15_2 < ma25_2):
                     is_cross_2 = True
 
                 # 1일 전 골든(데드)크로스 여부 판별
-                ma5_1 = get_prev_ma("BTC/USDT", INTERVAL, 5, 1)
-                ma25_1 = get_prev_ma("BTC/USDT", INTERVAL, 25, 1)
-                if(ma5_1 > ma25_1 or ma5_1 < ma25_1):
+                ma5_1 = get_prev_ma(ticker, INTERVAL, 5, 1)
+                ma10_1 = get_prev_ma(ticker, INTERVAL, 10, 1)
+                ma15_1 = get_prev_ma(ticker, INTERVAL, 15, 1)
+                ma25_1 = get_prev_ma(ticker, INTERVAL, 25, 1)
+                if(ma5_1 > ma10_1 > ma15_1 > ma25_1 or ma5_1 < ma10_1 < ma15_1 < ma25_1):
                     is_cross_1 = True
 
                 # 2일 전 -> 1일 전 골든(데드)크로스 전환되면 텔레그램 메시지 전송
@@ -56,11 +60,9 @@ while(True):
                     if(ma5_1 > ma25_1):
                         message = f"Binance {ticker} {MIN}분봉 골든크로스 전환"
                         bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
-                        print(message)
                     if(ma5_1 < ma25_1):
                         message = f"Binance {ticker} {MIN}분봉 데드크로스 전환"
                         bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
-                        print(message)
             
             time.sleep(60)
         

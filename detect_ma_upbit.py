@@ -25,11 +25,11 @@ TELEGRAM_CHAT_ID = 123456789      # 텔레그램 봇 아이디
 
 ##### 변수 ##################################
 bot = telegram.Bot(TELEGRAM_TOKEN)
-tickers = get_vol_top_tickers(10)
 #############################################
 
 while(True):
     try: 
+        tickers = get_vol_top_tickers(10)
         now = datetime.now()
         mod = divmod(now.minute, MIN)[1]
 
@@ -42,14 +42,18 @@ while(True):
 
                 # 2일 전 골든(데드)크로스 여부 판별
                 ma5_2 = get_prev_ma(ticker, INTERVAL, 5, 2)
+                ma10_2 = get_prev_ma(ticker, INTERVAL, 10, 2)
+                ma15_2 = get_prev_ma(ticker, INTERVAL, 15, 2)
                 ma25_2 = get_prev_ma(ticker, INTERVAL, 25, 2)
-                if(ma5_2 > ma25_2 or ma5_2 < ma25_2):
+                if(ma5_2 > ma10_2 > ma15_2 > ma25_2 or ma5_2 < ma10_2 < ma15_2 < ma25_2):
                     is_cross_2 = True
 
                 # 1일 전 골든(데드)크로스 여부 판별
                 ma5_1 = get_prev_ma(ticker, INTERVAL, 5, 1)
+                ma10_1 = get_prev_ma(ticker, INTERVAL, 10, 1)
+                ma15_1 = get_prev_ma(ticker, INTERVAL, 15, 1)
                 ma25_1 = get_prev_ma(ticker, INTERVAL, 25, 1)
-                if(ma5_1 > ma25_1 or ma5_1 < ma25_1):
+                if(ma5_1 > ma10_1 > ma15_1 > ma25_1 or ma5_1 < ma10_1 < ma15_1 < ma25_1):
                     is_cross_1 = True
 
                 # 2일 전 -> 1일 전 골든(데드)크로스 전환되면 텔레그램 메시지 전송
@@ -57,7 +61,6 @@ while(True):
                     if(ma5_1 > ma25_1):
                         message = f"Upbit {ticker} {MIN}분봉 골든크로스 전환"
                         bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
-                        print(message)
             
             time.sleep(60)
         

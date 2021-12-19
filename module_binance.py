@@ -70,13 +70,16 @@ def get_bb(ticker, interval, count, multipler):
 
     std = np.std(list_close)      # 표준편차(종가 기준)
     mbb = np.average(list_close)  # 볼린저 밴드의 중심선(이동평균)
-    ubb = mbb + std * multipler      # 상한선 = 중심선 + 기간 내 표준편차 * 승수
-    lbb = mbb - std * multipler      # 하한선 = 중신선 + 기간 내 표준편차 * 승수
+    ubb = mbb + std * multipler   # 상한선 = 중심선 + 기간 내 표준편차 * 승수
+    lbb = mbb - std * multipler   # 하한선 = 중신선 + 기간 내 표준편차 * 승수
+    per_b = (current - lbb) / (ubb - lbb) # %b = (가격 - 볼린저밴드 하단선) / (볼린저밴드 상단선 - 볼린저 밴드 하단선)
 
     dict_bb = {}
+    dict_bb["ticker"] = ticker
     dict_bb["ubb"] = ubb
     dict_bb["mbb"] = mbb
     dict_bb["lbb"] = lbb
     dict_bb["current"] = current
+    dict_bb["per_b"] = per_b
     
     return dict_bb

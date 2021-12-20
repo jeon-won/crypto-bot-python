@@ -103,6 +103,37 @@ def get_bb(ticker, interval, count, multiplier):
     return dict_bb
 
 
+def get_prev_bb(ticker, interval, count, multiplier):
+    """직전 봉에 대한 볼린저 밴드에 사용되는 값(중심선, 상한선, 하한선)을 계산합니다.
+
+    Args: 
+        ticker: ticker (예: "KRW-BTC") 
+        interval: 몇분 봉? (예: "minute5", "minute15" 등)
+        count: 이동평균선 기간  (예: 20)
+        multipler: 승수 (예: 2)
+    
+    Returns: dict
+    """
+    df = pyupbit.get_ohlcv(ticker, interval, count+1)[0:count]
+    
+    current = df['close'][count-1]
+    std = df['close'].std()                # 종가 기준 표준편차
+    mbb = df['close'].mean()               # 볼린저 밴드 중심선(이동평균)
+    ubb = mbb + std * multiplier           # 상한선 = 중심선 + 기간 내 표준편차 * 승수
+    lbb = mbb - std * multiplier           # 하한선 = 중신선 + 기간 내 표준편차 * 승수
+    per_b = (current - lbb) / (ubb - lbb)  # %b = (가격 - 볼린저밴드_하단선) / (볼린저밴드 상단선 - 볼린저 밴드 하단선)
+    
+    dict_bb = {}
+    dict_bb["ticker"] = ticker
+    dict_bb["mbb"] = mbb
+    dict_bb["ubb"] = ubb
+    dict_bb["lbb"] = lbb
+    dict_bb["current"] = current
+    dict_bb["per_b"] = per_b
+    
+    return dict_bb
+
+
 def get_vol_top_tickers(top_num=0):
     """업비트의 최근 24시간 기준 거래량 높은 코인들을 얻어옵니다.
 

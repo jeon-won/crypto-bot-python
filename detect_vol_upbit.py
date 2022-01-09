@@ -16,6 +16,7 @@ load_dotenv()
 
 INTERVAL = sys.argv[1]  # 차트 종류
 N = float(sys.argv[2])  # 승수
+COUNT = 120             # 거래량 이동평균
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")      # 텔레그렘 봇 토큰
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")  # 텔레그램 봇 아이디
 
@@ -26,7 +27,7 @@ tickers = module_upbit.get_vol_top_tickers(10)
 # 각 ticker 조사
 for ticker in tickers:
     # ticker의 시가, 고가, 저가, 종가, 거래량을 얻어옴
-    ohlcvs = pyupbit.get_ohlcv(ticker, interval=INTERVAL)
+    ohlcvs = pyupbit.get_ohlcv(ticker, interval=INTERVAL, count=COUNT)
     
     mean = ohlcvs["volume"].mean() # 평균
     std = ohlcvs["volume"].std()   # 표준편차

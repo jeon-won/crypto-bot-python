@@ -16,7 +16,7 @@ load_dotenv()
 
 INTERVAL = sys.argv[1]  # 차트 종류
 N = float(sys.argv[2])  # 승수
-COUNT = 200             # 거래량 이동평균
+COUNT = 120             # 거래량 이동평균
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")      # 텔레그렘 봇 토큰
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")  # 텔레그램 봇 아이디
 
@@ -27,7 +27,7 @@ tickers = ["BTC/USDT"]
 # 각 ticker 조사
 for ticker in tickers:
     # ticker의 시가, 고가, 저가, 종가, 거래량을 얻어옴
-    ohlcvs = binance.fetch_ohlcv(ticker, INTERVAL, count=COUNT)
+    ohlcvs = binance.fetch_ohlcv(ticker, INTERVAL, limit=COUNT)
 
     # numpy 배열에 거래량 데이터만 담기
     ohlcvs_np = np.array([])

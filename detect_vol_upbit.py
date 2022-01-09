@@ -38,5 +38,5 @@ for ticker in tickers:
 
     # 현재 거래량이 n_std 값을 넘어서고, 음봉인 경우 텔레그램 메시지 전송(업비트는 숏 포지션을 잡을 수 없으므로...)
     if(current_vol >= n_std and open_price >= close_price):
-        message = f"Upbit {ticker} {INTERVAL}분봉 차트 거래량({current_vol}) ★폭발★"
+        message = f"Upbit {ticker} {INTERVAL}분봉 차트 거래량({round(current_vol)}) ★폭발★"
         bot.sendMessage(TELEGRAM_CHAT_ID, text=message)

@@ -11,6 +11,7 @@ calc_vol_binance.py
 
 TICKER = sys.argv[1]    # ticker
 N = float(sys.argv[2])  # 승수
+COUNT = 120             # 거래량 평균
 
 timeframes = ["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d"]
 binance = ccxt.binance()
@@ -19,7 +20,7 @@ binance = ccxt.binance()
 print(f"# {TICKER}")
 
 for tf in timeframes:
-    ohlcvs = binance.fetch_ohlcv(TICKER, tf)
+    ohlcvs = binance.fetch_ohlcv(TICKER, tf, limit=COUNT)
 
     # numpy 배열에 거래량 데이터만 담기
     ohlcvs_np = np.array([])

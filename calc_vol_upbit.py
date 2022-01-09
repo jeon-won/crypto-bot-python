@@ -11,6 +11,7 @@ calc_vol_upbit.py
 
 TICKER = sys.argv[1]    # ticker
 N = float(sys.argv[2])  # 승수
+COUNT = 120             # 거래량 평균
 
 timeframes = ["minute1", "minute3", "minute5", "minute15", "minute30", "minute60", "minute240", "day"]
 
@@ -18,7 +19,7 @@ print(f"# {TICKER}")
 
 for tf in timeframes:
     # ticker
-    ohlcvs = pyupbit.get_ohlcv(TICKER, interval=tf)
+    ohlcvs = pyupbit.get_ohlcv(TICKER, interval=tf, count=COUNT)
 
     mean = ohlcvs["volume"].mean() # 평균
     std = ohlcvs["volume"].std()   # 표준편차

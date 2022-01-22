@@ -26,7 +26,7 @@ tickers = module_upbit.get_vol_top_tickers(10)
 
 # 각 ticker 조사
 for ticker in tickers:
-    bb = module_upbit.get_prev_bb(ticker, INTERVAL, BB_COUNT, BB_MULTIPLIER)
+    bb = module_upbit.get_bb(ticker, INTERVAL, BB_COUNT, BB_MULTIPLIER)
     
     # # 현재가가 볼린저 밴드 하단 아래에 위치하면 텔레그램 메시지 전송
     # if(bb["current"] < bb["lbb"]):

@@ -9,7 +9,7 @@ detect_bb_binance.py
 * Date: 2021. 10. 5.
 * Author: Jeon Won
 * Func: 바이낸스 차트의 현재가가 볼린저 밴드 상단 또는 하단을 터치하는 캔들 발생 시 텔레그램 메시지 전송
-* Usage: 15분봉 차트 조사 명령어는 `python3 detec_bb_binance.py 15m` (1m, 3m, 5m, 15m, 30m, 1h, 4h, 6h, 12h, 1d 사용)
+* Usage: 15분봉 차트 조사 명령어는 `python3 detect_bb_binance.py 15m` (1m, 3m, 5m, 15m, 30m, 1h, 4h, 6h, 12h, 1d 사용)
 """
 
 load_dotenv()
@@ -21,7 +21,7 @@ BB_COUNT = 20      # 볼린저 밴드 길이
 BB_MULTIPLIER = 2  # 볼린저 밴드에서 상하한선을 정하기 위해 사용하는 곱(승수)
 
 bot = telegram.Bot(TELEGRAM_TOKEN)
-tickers = ["BTC/USDT"]
+tickers = ["BTC/USDT", "XRP/USDT", "ETH/USDT"]
 
 # 알림을 보내지 않은 ticker 조사
 for ticker in tickers:                 

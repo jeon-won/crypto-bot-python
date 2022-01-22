@@ -55,7 +55,7 @@ def get_bb(ticker, interval, count, multipler):
     
     Returns: dict
     """
-    list_close = []
+    list_close = [] # 종가 정보를 담을 list
 
     binance = ccxt.binance()
     ohlcvs = binance.fetch_ohlcv(ticker, interval)
@@ -64,8 +64,8 @@ def get_bb(ticker, interval, count, multipler):
 
     for ohlcv in ohlcvs_edited: # BB에 사용할 정보
         list_close.append(ohlcv[4])
-    ticker = binance.fetch_ticker(ticker)
-    current = ticker['close'] # 현재가
+    fetch_ticker = binance.fetch_ticker(ticker)
+    current = fetch_ticker['close'] # 현재가
     list_close.append(current)
 
     std = np.std(list_close)      # 표준편차(종가 기준)

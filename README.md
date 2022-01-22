@@ -43,9 +43,20 @@ TELEGRAM_CHAT_ID = 12345678990    # 텔레그램 봇 아이디
 * 바이낸스 15분봉 기준 조사 명령어는 `python3 detect_vol_binance.py 15m` 입니다. 15m 대신 1m, 3m, 5m, 30m, 1h, 4h, 6h, 12h, 1d 등을 사용할 수 있습니다.
 * ticker 종류는 소스코드에서 수정할 수 있습니다.
 
+### detect_bb_exceed_upbit.py
+* 업비트 차트의 %B 0 값을 상향돌파 시 텔레그램 메시지를 전송합니다.
+* 업비트 15분봉 기준 조사 명령어는 `python3 detect_bb_exceed_upbit.py minute15` 입니다.
+* minute15 대신 minute1, minute3, minute5, minute30, minute60, minute240 day 등을 사용할 수 있습니다.
+* ticker 종류는 소스코드에서 수정할 수 있습니다.
+
 ### detect_bb_upbit.py
 * 업비트 차트의 현재가가 볼린저 밴드 하단을 터치하는 캔들 발생 시 텔레그램 메시지를 전송합니다.
 * 업비트 15분봉 기준 조사 명령어는 `python3 detect_bb_upbit.py minute15` 입니다. minute15 대신 minute1, minute3, minute5, minute30, minute60, minute240 day 등을 사용할 수 있습니다.
+* ticker 종류는 소스코드에서 수정할 수 있습니다.
+
+### detect_rsi_exceed_upbit.py
+* 업비트 차트의 과매도 기준 값을 상향돌파 시 텔레그램 메시지를 전송합니다.
+* 업비트 15분봉 및 과매도 기준 30 조사 명령어는 `python3 detect_rsi_exceed_upbit.py minute15 30` 입니다.
 * ticker 종류는 소스코드에서 수정할 수 있습니다.
 
 ### detect_vol_binance.py
@@ -57,6 +68,10 @@ TELEGRAM_CHAT_ID = 12345678990    # 텔레그램 봇 아이디
 * 업비트 차트 거래량이 평소보다 늘어났다고 판단했을 때 텔레그램 메시지를 전송합니다.
 * 업비트 15분봉 차트에 승수를 2로 하는 명령어는 `python3 detect_vol_upbit.py minute15 2` 입니다. minute15 대신 minute1, minute3, minute5, minute30, minute60, minute240 day 등을 사용할 수 있습니다.
 * ticker 종류는 소스코드에서 수정할 수 있습니다. 승수를 0으로 잡으면 거래량이 평균 이상일 때 텔레그램 메시지를 전송합니다.
+
+### stoploss_upbit.py
+* 업비트 보유 중인 특정 코인의 현재가를 감시하여 스탑로스 설정 가겨에 도달하면 수익실현 또는 손절합니다.
+* 실행 명령어는 `python3 stoploss_upbit.py COIN 수익실현가 손절가` 입니다. 예를 들어, 리플 현재가가 1000원 도달 시 수익실현, 800원 도달 시 손절하는 명령어는 `python3 stoploss_upbit.py XRP 1000 800` 입니다.
 
 ### module_binance.py
 바이낸스 API(ccxt)를 활용한 함수 모음

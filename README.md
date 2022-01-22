@@ -21,6 +21,8 @@
 ```python
 TELEGRAM_TOKEN = "tElEgRaMtOkEn"  # 텔레그렘 봇 토큰
 TELEGRAM_CHAT_ID = 12345678990    # 텔레그램 봇 아이디
+UPBIT_ACCESS_KEY = "uPbItAcCeSsKeY"  # 업비트 엑세스 키
+UPBIT_SECRET_KEY = "uPbItSeCrEtKeY"  # 업비트 시크릿 키
 ```
 
 아래 코드 설명을 참고하여 사용하면 됩니다. 반복적인 실행이 필요하다면 아래 명령어를 cron에 등록하여 사용합니다.

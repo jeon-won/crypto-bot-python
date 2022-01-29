@@ -1,5 +1,6 @@
 import ccxt
 import numpy as np
+import pandas as pd
 
 def get_ma(ticker, interval, count):
     """현재 이동 평균을 조회합니다.
@@ -79,7 +80,39 @@ def get_bb(ticker, interval, count, multipler):
     dict_bb["ubb"] = ubb
     dict_bb["mbb"] = mbb
     dict_bb["lbb"] = lbb
-    dict_bb["current"] = current
+    dict_bb["current_price"] = current
     dict_bb["per_b"] = per_b
     
+    return dict_bb
+
+
+def get_ccxt_bb(ticker, ohlcv_list, multiplier: int=2):
+    """list 객체를 받아 볼린저 밴드에 사용되는 값(중심선, 상한선, 하한선)을 계산합니다. list 객체는 ccxt의 fetch_ohlcv() 함수가 반환하는 값입니다.
+
+    Args: 
+        ticker: ticker (예: "BTC/USDT") 
+        df: list (ccxt fetch_ohlcv() 함수의 반환값)
+        multipler: 승수 (기본값: 2)
+    
+    Returns: dict
+    """
+    df = pd.DataFrame(columns=["close"])
+    for ohlcv in ohlcv_list:
+        df = df.append({"close": ohlcv[4]}, ignore_index=True)
+
+    current_price = df.iloc[len(df)-1]["close"]  # 현재 가격
+    std = df["close"].std()                      # 종가 기준 표준편차
+    mbb = df["close"].mean()                     # 볼린저 밴드 중심선(이동평균)
+    ubb = mbb + std * multiplier                 # 상한선 = 중심선 + 기간 내 표준편차 * 승수
+    lbb = mbb - std * multiplier                 # 하한선 = 중신선 + 기간 내 표준편차 * 승수
+    per_b = (current_price - lbb) / (ubb - lbb)  # %b = (가격 - 볼린저밴드_하단선) / (볼린저밴드 상단선 - 볼린저 밴드 하단선)
+
+    dict_bb = {}
+    dict_bb["ticker"] = ticker
+    dict_bb["mbb"] = mbb
+    dict_bb["ubb"] = ubb
+    dict_bb["lbb"] = lbb
+    dict_bb["current_price"] = current_price
+    dict_bb["per_b"] = per_b
+
     return dict_bb

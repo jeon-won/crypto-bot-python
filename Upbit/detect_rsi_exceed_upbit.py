@@ -4,6 +4,7 @@ from module_upbit import get_vol_top_tickers, get_pyupbit_rsi
 import telegram
 import pyupbit
 import sys
+# import time
 
 """
 detect_rsi_exceed_upbit.py
@@ -39,6 +40,8 @@ for ticker in tickers:
     # 직전 -> 현재 RSI값이 과매도 기준 값(OVERSOLD) 상향돌파 시 텔레그램 메시지 전송
     if(prev_rsi < 30 and current_rsi > 30):
         alert_list.append(ticker)
+
+    # time.sleep(0.1)  # 조사할 ticker 수가 많은 경우 API 호출 제한에 걸리지 않도록 해야 함
 
 # 텔레그램 메시지 보낼 ticker 리스트가 존재하면 텔레그램 메시지 전송
 if alert_list:

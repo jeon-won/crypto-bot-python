@@ -85,19 +85,19 @@ def get_bb(ticker, interval, count: int=20, multiplier: int=2):
     """
     df = pyupbit.get_ohlcv(ticker, interval, count)
     
-    current = df['close'][count-1]
+    current_price = df['close'][count-1]
     std = df['close'].std()                # 종가 기준 표준편차
     mbb = df['close'].mean()               # 볼린저 밴드 중심선(이동평균)
     ubb = mbb + std * multiplier           # 상한선 = 중심선 + 기간 내 표준편차 * 승수
     lbb = mbb - std * multiplier           # 하한선 = 중신선 + 기간 내 표준편차 * 승수
-    per_b = (current - lbb) / (ubb - lbb)  # %b = (가격 - 볼린저밴드_하단선) / (볼린저밴드 상단선 - 볼린저 밴드 하단선)
+    per_b = (current_price - lbb) / (ubb - lbb)  # %b = (가격 - 볼린저밴드_하단선) / (볼린저밴드 상단선 - 볼린저 밴드 하단선)
     
     dict_bb = {}
     dict_bb["ticker"] = ticker
     dict_bb["mbb"] = mbb
     dict_bb["ubb"] = ubb
     dict_bb["lbb"] = lbb
-    dict_bb["current"] = current
+    dict_bb["current_price"] = current_price
     dict_bb["per_b"] = per_b
     
     return dict_bb
@@ -113,19 +113,19 @@ def get_pyupbit_bb(ticker, df, multiplier: int=2):
     
     Returns: dict
     """
-    current = df['close'][len(df)-1]
-    std = df['close'].std()                # 종가 기준 표준편차
-    mbb = df['close'].mean()               # 볼린저 밴드 중심선(이동평균)
-    ubb = mbb + std * multiplier           # 상한선 = 중심선 + 기간 내 표준편차 * 승수
-    lbb = mbb - std * multiplier           # 하한선 = 중신선 + 기간 내 표준편차 * 승수
-    per_b = (current - lbb) / (ubb - lbb)  # %b = (가격 - 볼린저밴드_하단선) / (볼린저밴드 상단선 - 볼린저 밴드 하단선)
+    current_price = df.iloc[len(df)-1]["close"]  # 현재 가격
+    std = df["close"].std()                      # 종가 기준 표준편차
+    mbb = df["close"].mean()                     # 볼린저 밴드 중심선(이동평균)
+    ubb = mbb + std * multiplier                 # 상한선 = 중심선 + 기간 내 표준편차 * 승수
+    lbb = mbb - std * multiplier                 # 하한선 = 중신선 + 기간 내 표준편차 * 승수
+    per_b = (current_price - lbb) / (ubb - lbb)  # %b = (가격 - 볼린저밴드_하단선) / (볼린저밴드 상단선 - 볼린저 밴드 하단선)
     
     dict_bb = {}
     dict_bb["ticker"] = ticker
     dict_bb["mbb"] = mbb
     dict_bb["ubb"] = ubb
     dict_bb["lbb"] = lbb
-    dict_bb["current"] = current
+    dict_bb["current_price"] = current_price
     dict_bb["per_b"] = per_b
     
     return dict_bb
@@ -144,19 +144,19 @@ def get_prev_bb(ticker, interval, count, multiplier):
     """
     df = pyupbit.get_ohlcv(ticker, interval, count+1)[0:count]
     
-    current = df['close'][count-1]
+    current_price = df['close'][count-1]
     std = df['close'].std()                # 종가 기준 표준편차
     mbb = df['close'].mean()               # 볼린저 밴드 중심선(이동평균)
     ubb = mbb + std * multiplier           # 상한선 = 중심선 + 기간 내 표준편차 * 승수
     lbb = mbb - std * multiplier           # 하한선 = 중신선 + 기간 내 표준편차 * 승수
-    per_b = (current - lbb) / (ubb - lbb)  # %b = (가격 - 볼린저밴드_하단선) / (볼린저밴드 상단선 - 볼린저 밴드 하단선)
+    per_b = (current_price - lbb) / (ubb - lbb)  # %b = (가격 - 볼린저밴드_하단선) / (볼린저밴드 상단선 - 볼린저 밴드 하단선)
     
     dict_bb = {}
     dict_bb["ticker"] = ticker
     dict_bb["mbb"] = mbb
     dict_bb["ubb"] = ubb
     dict_bb["lbb"] = lbb
-    dict_bb["current"] = current
+    dict_bb["current_price"] = current_price
     dict_bb["per_b"] = per_b
     
     return dict_bb

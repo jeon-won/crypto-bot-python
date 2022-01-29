@@ -4,6 +4,7 @@ from module_upbit import get_vol_top_tickers, get_pyupbit_bb
 import telegram
 import pyupbit
 import sys
+# import time
 
 """
 detect_bb_exceed_upbit.py
@@ -36,15 +37,17 @@ for ticker in tickers:
     prev_df = df[0:len(df)-1]   # 직전 기준 BB_COUNT개의 데이터프레임
     current_df = df[1:len(df)]  # 현재 기준 BB_COUNT개의 데이터프레임
     
-    prev_bb = get_pyupbit_bb(ticker, prev_df, 2)        # 직전 기준 볼린저밴드 값
-    current_bb = get_pyupbit_bb(ticker, current_df, 2)  # 현재 기준 볼린저밴드 값
+    prev_bb = get_pyupbit_bb(ticker, prev_df, BB_MULTIPLIER)        # 직전 기준 볼린저밴드 값
+    current_bb = get_pyupbit_bb(ticker, current_df, BB_MULTIPLIER)  # 현재 기준 볼린저밴드 값
     
-    prev_per_b = prev_bb['per_b']        # 직전 기준 %B 값 
-    current_per_b = current_bb['per_b']  # 현재 기준 %B 값
+    prev_per_b = prev_bb["per_b"]        # 직전 기준 %B 값 
+    current_per_b = current_bb["per_b"]  # 현재 기준 %B 값
 
     # 직전 -> 현재 %B값이 0을 상향돌파한 ticker를 텔레그램 메시지 보낼 ticker 리스트에 추가
     if(prev_per_b < 0 and current_per_b > 0):
         alert_list.append(ticker)
+    
+    # time.sleep(0.1)  # 조사할 ticker 수가 많은 경우 API 호출 제한에 걸리지 않도록 해야 함
     
 # 텔레그램 메시지 전송
 if alert_list:

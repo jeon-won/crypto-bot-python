@@ -23,13 +23,12 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")  # 텔레그램 봇 아이
 bot = telegram.Bot(TELEGRAM_TOKEN)
 binance = ccxt.binance()
 tickers = ["BTC/USDT"]
+alert_list = []  # 텔레그램 메시지 보낼 tickers 리스트
 
 # 각 ticker 조사
 for ticker in tickers:
-    # ticker의 시가, 고가, 저가, 종가, 거래량을 얻어옴
+    # ticker의 시가, 고가, 저가, 종가, 거래량을 얻어온 후 numpy 배열에 거래량 데이터만 담기
     ohlcvs = binance.fetch_ohlcv(ticker, INTERVAL, limit=COUNT)
-
-    # numpy 배열에 거래량 데이터만 담기
     ohlcvs_np = np.array([])
     for ohlcv in ohlcvs:
         ohlcvs_np = np.append(ohlcvs_np, ohlcv[5])
@@ -39,7 +38,11 @@ for ticker in tickers:
     std = ohlcvs_np.std()    # 표준편차
     n_std = mean + N * std   # 현재 거래량이 이 값보다 높으면 거래량이 급증한 것으로 판단
 
-    # 현재 거래량이 n_std 값을 넘어선 경우 텔레그램 메시지 전송
+    # 현재 거래량이 n_std 값을 넘어선 경우 텔레그램 메시지 보낼 tickers 리스트에 추가
     if(current_vol >= n_std):
-        message = f"Binance {ticker} {INTERVAL} 차트 차트 거래량({round(current_vol)}) ★폭발★"
-        bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
+        alert_list.append(ticker)
+
+# 텔레그램 메시지 전송
+if alert_list:
+    message = f"Binance {INTERVAL} 차트 거래량 폭발 Tickers: {alert_list}"
+    bot.sendMessage(TELEGRAM_CHAT_ID, text=message)

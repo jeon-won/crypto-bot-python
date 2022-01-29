@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-import module_upbit
+from module_upbit import get_vol_top_tickers, get_bb
 import telegram
 import sys
 
@@ -21,19 +21,19 @@ BB_COUNT = 20      # 볼린저 밴드(BB)의 길이
 BB_MULTIPLIER = 2  # 볼린저 밴드(BB)에서 상하한선을 정하기 위해 사용하는 곱(승수)
 
 bot = telegram.Bot(TELEGRAM_TOKEN)
-tickers = module_upbit.get_vol_top_tickers(10)
-# tickers = ["KRW-BTC", "KRW-ETH", "KRW-XRP"]
+tickers = get_vol_top_tickers(10)  # 최근 24시간 거래량 Top 10 tickers 리스트
+# tickers = ["KRW-BTC", "KRW-ETH", "KRW-XRP"]  # 또는 수동으로 Tickers 지정
+alert_0_list = []  # 텔레그램 메시지 보낼 ticker 리스트
 
 # 각 ticker 조사
 for ticker in tickers:
-    bb = module_upbit.get_bb(ticker, INTERVAL, BB_COUNT, BB_MULTIPLIER)
-    
-    # # 현재가가 볼린저 밴드 하단 아래에 위치하면 텔레그램 메시지 전송
-    # if(bb["current"] < bb["lbb"]):
-    #     message = f"Upbit {ticker} {INTERVAL} 차트 볼린저밴드 하단 터치 (현재가: {bb['current']}"
-    #     bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
+    bb = get_bb(ticker, INTERVAL, BB_COUNT, BB_MULTIPLIER)
 
-    # %B 값 0 미만 시 텔레그램 메시지 전송
+    # %B 값 0 미만 시(과매도, 현재가가 볼린저 밴드 하단 아래에 위치하면) 텔레그램 보낼 tickers 리스트에 추가
     if(bb["per_b"] < 0):
-        message = f"Upbit {ticker} {INTERVAL} 차트 볼린저밴드 %B 값 0 미만 (%B: {round(bb['per_b'], 3)} / 현재가: {bb['current']})"
-        bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
+        alert_0_list.append(ticker)
+
+# 과매도 Tickers 리스트 텔레그램 메시지 전송
+if alert_0_list:
+    message = f"Upbit {INTERVAL} 차트 볼린저밴드 과매도 Tickers: {alert_0_list}"
+    bot.sendMessage(TELEGRAM_CHAT_ID, text=message)

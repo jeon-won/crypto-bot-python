@@ -22,8 +22,9 @@ BB_COUNT = 20      # 볼린저 밴드(BB)의 길이
 BB_MULTIPLIER = 2  # 볼린저 밴드(BB)에서 상하한선을 정하기 위해 사용하는 곱(승수)
 
 bot = telegram.Bot(TELEGRAM_TOKEN)
-tickers = get_vol_top_tickers(10)
-# tickers = ["KRW-BTC", "KRW-ETH", "KRW-XRP"]
+tickers = get_vol_top_tickers(10)  # 최근 24시간 거래량 Top 10 tickers 리스트
+# tickers = ["KRW-BTC", "KRW-ETH", "KRW-XRP"]  # 또는 수동으로 Tickers 지정
+alert_list = []  # 텔레그램 메시지 보낼 ticker 리스트
 
 # 각 ticker 조사
 for ticker in tickers:
@@ -41,7 +42,11 @@ for ticker in tickers:
     prev_per_b = prev_bb['per_b']        # 직전 기준 %B 값 
     current_per_b = current_bb['per_b']  # 현재 기준 %B 값
 
-    # 직전 -> 현재 %B값이 0을 상향돌파 했을 때 텔레그램 메시지 전송
+    # 직전 -> 현재 %B값이 0을 상향돌파한 ticker를 텔레그램 메시지 보낼 ticker 리스트에 추가
     if(prev_per_b < 0 and current_per_b > 0):
-        message = f"Upbit {ticker} {INTERVAL} 차트 볼린저밴드 %B 값 0 상향돌파 (현재가: {current_bb['current']})"
-        bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
+        alert_list.append(ticker)
+    
+# 텔레그램 메시지 전송
+if alert_list:
+    message = f"Upbit {INTERVAL} 차트 볼린저밴드 과매도 Tickers: {alert_list}"
+    bot.sendMessage(TELEGRAM_CHAT_ID, text=message)

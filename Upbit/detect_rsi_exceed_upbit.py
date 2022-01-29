@@ -21,8 +21,9 @@ TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")      # 텔레그램 봇 토큰
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")  # 텔레그램 봇 아이디
 
 bot = telegram.Bot(TELEGRAM_TOKEN)
-tickers = get_vol_top_tickers(10)
-# tickers = ["KRW-BTC", "KRW-ETH", "KRW-XRP"]
+tickers = get_vol_top_tickers(10)  # 최근 24시간 거래량 Top 10 tickers 리스트
+# tickers = ["KRW-BTC", "KRW-ETH", "KRW-XRP"]  # 또는 수동으로 Tickers 지정
+alert_list = []  # 텔레그램 메시지 보낼 ticker 리스트
 
 # 각 ticker 조사
 for ticker in tickers:
@@ -37,5 +38,9 @@ for ticker in tickers:
     
     # 직전 -> 현재 RSI값이 과매도 기준 값(OVERSOLD) 상향돌파 시 텔레그램 메시지 전송
     if(prev_rsi < 30 and current_rsi > 30):
-        message = f"Upbit {ticker} {INTERVAL} 차트 RSI 값 {OVERSOLD} 상향돌파"
-        bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
+        alert_list.append(ticker)
+
+# 텔레그램 메시지 보낼 ticker 리스트가 존재하면 텔레그램 메시지 전송
+if alert_list:
+    message = f"Upbit {INTERVAL} 차트 RSI {OVERSOLD} 상향돌파 Tickers: {alert_list}"
+    bot.sendMessage(TELEGRAM_CHAT_ID, text=message)

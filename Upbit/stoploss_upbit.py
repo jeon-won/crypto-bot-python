@@ -10,7 +10,7 @@ stoploss_upbit.py
 * Date: 2022. 1. 21.
 * Author: Jeon Won
 * Func: 업비트 보유 중인 특정 코인의 현재가를 감시하여 스탑로스 설정 가격에 도달하면 수익실현 또는 손절
-* Usage: python3 stoploss_upbit.py 수익실현가 손절가
+* Usage: python3 stoploss_upbit.py COIN 수익실현가 손절가
   - 예: 리플 현재가가 1000원 도달 시 수익실현, 800원 도달 시 손절하는 명령어는 `python3 stoploss_upbit.py XRP 1000 800`
   - 백그라운드로 돌리려면 `nohup python3 stoploss_upbit.py XRP 1000 800`
 """

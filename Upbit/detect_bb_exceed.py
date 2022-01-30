@@ -51,5 +51,5 @@ for ticker in tickers:
     
 # 텔레그램 메시지 전송
 if alert_list:
-    message = f"Upbit {INTERVAL} 차트 볼린저밴드 과매도 Tickers: {alert_list}"
+    message = f"Upbit {INTERVAL} 차트 볼린저밴드 %B 0 상향돌파 Tickers: {alert_list}"
     bot.sendMessage(TELEGRAM_CHAT_ID, text=message)

@@ -208,7 +208,9 @@ def get_pyupbit_rsi(df: pandas.DataFrame, period: int = 14):
 def get_vol_top_tickers(top_num=0, remove_tickers=[]):
     """업비트의 최근 24시간 기준 거래량 높은 코인들을 얻어옵니다.
 
-    Args: top_num (거래량 상위 몇 개의 코인들을 얻어올 것인가?)
+    Args: 
+        top_num (거래량 상위 몇 개의 코인들을 얻어올 것인가?)
+        remove_tickers (제외할 ticker list)
 
     Returns: list (잘못된 매개변수를 입력한 경우 None)
     """

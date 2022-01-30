@@ -12,7 +12,7 @@ stoploss_upbit.py
 * Func: 업비트 보유 중인 특정 코인의 현재가를 감시하여 스탑로스 설정 가격에 도달하면 수익실현 또는 손절
 * Usage: python3 stoploss_upbit.py COIN 수익실현가 손절가
   - 예: 리플 현재가가 1000원 도달 시 수익실현, 800원 도달 시 손절하는 명령어는 `python3 stoploss_upbit.py XRP 1000 800`
-  - 백그라운드로 돌리려면 `nohup python3 stoploss_upbit.py XRP 1000 800`
+  - 백그라운드로 돌리려면 `nohup python3 stoploss_upbit.py XRP 1000 800 &`
 """
 
 load_dotenv()
@@ -37,22 +37,19 @@ for balance in balances:
         while True: 
             try:
                 current_price = pyupbit.get_current_price(KRW_TICKER)
-                print(f"{TICKER} 현재가: {current_price} / 수익실현가: {STOP} / 손절가: {LOSS}")
                 
-                # 현재가가 STOP 돌파 시 수익실현
+                # 현재가가 STOP 가격 도달 시 수익실현
                 if(current_price >= STOP):
                     upbit.sell_market_order(KRW_TICKER, float(balance['balance']))
                     message = f"{KRW_TICKER} {float(balance['balance'])}개를 수익실현합니다."
                     bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
-                    print(message)
                     break
 
-                # 현재가가 LOSS 돌파 시 손절
+                # 현재가가 LOSS 가격 도달 시 손절
                 if(current_price <= LOSS):
                     upbit.sell_market_order(KRW_TICKER, float(balance['balance']))
                     message = f"{KRW_TICKER} {float(balance['balance'])}개를 손절합니다."
                     bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
-                    print(message)
                     break
                 
                 time.sleep(1)

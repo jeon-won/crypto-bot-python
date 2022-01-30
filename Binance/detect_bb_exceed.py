@@ -24,7 +24,11 @@ BB_MULTIPLIER = 2  # 볼린저 밴드(BB)에서 상하한선을 정하기 위해
 
 bot = telegram.Bot(TELEGRAM_TOKEN)
 binance = ccxt.binance()
-tickers = ["BTC/USDT", "ETH/USDT", "XRP/USDT", "SAND/USDT", "SOL/USDT", "ATOM/USDT", "DOGE/USDT", "BNB/USDT"]
+tickers = ["BTC/USDT", "ETH/USDT", "XRP/USDT", "SOL/USDT", "SAND/USDT", "BNB/USDT", "AXS/USDT", "ATOM/USDT", "DOGE/USDT", "EOS/USDT", 
+    "BCH/USDT",  "LTC/USDT", "ADA/USDT", "ETC/USDT", "LINK/USDT", "TRX/USDT", "DOT/USDT", "MATIC/USDT", "UNI/USDT", "ICP/USDT", 
+    "AAVE/USDT", "FIL/USDT", "XLM/USDT", "XTZ/USDT", "SUSHI/USDT", "THETA/USDT", "AVAX/USDT", "LUNA/USDT", "DASH/USDT", "SHIB/USDT", 
+    "XEM/USDT", "MANA/USDT", "GALA/USDT", "DYDX/USDT", "CRV/USDT", "NEAR/USDT", "EGLD/USDT", "KSM/USDT", "AR/USDT", "REN/USDT", 
+    "FTM/USDT"]
 alert_0_list = []  # %B 0 값 상향돌파 시 텔레그램 메시지 보낼 ticker 리스트
 alert_1_list = []  # %B 1 값 하향돌파 시 텔레그램 메시지 보낼 ticker 리스트
 
@@ -54,8 +58,8 @@ for ticker in tickers:
 
 # 텔레그램 메시지 전송
 if alert_0_list:
-    message = f"Binance {INTERVAL} 차트 볼린저밴드 과매도 Tickers: {alert_0_list}"
+    message = f"Binance {INTERVAL} 차트 볼린저밴드 %B 0 상향돌파 Tickers: {alert_0_list}"
     bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
 if alert_1_list:
-    message = f"Binance {INTERVAL} 차트 볼린저밴드 과매수 Tickers: {alert_1_list}"
+    message = f"Binance {INTERVAL} 차트 볼린저밴드 %B 1 하향돌파 Tickers: {alert_1_list}"
     bot.sendMessage(TELEGRAM_CHAT_ID, text=message)

@@ -2,11 +2,11 @@ import sys
 import numpy as np
 import ccxt
 """
-calc_vol_binance.py
+Binance/calc_vol.py
 * Date: 2021. 10. 9.
 * Author: Jeon Won
 * Func: 바이낸스 거래량이 평소보다 높아졌다고 판단하기 위한 기준 계산 (판단기준: 평균거래량 + 승수 * 표준편차)
-* Usage: 비트코인에 승수를 2로 하는 조사 명령어는 `python detect_vol_binance.py BTC/USDT 2`
+* Usage: 비트코인에 승수를 2로 하는 조사 명령어는 `python Binance/calc_vol.py BTC/USDT 2`
 """
 
 TICKER = sys.argv[1]    # ticker

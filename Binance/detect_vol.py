@@ -5,11 +5,11 @@ import numpy as np
 import ccxt
 import telegram
 """
-detect_vol_binance.py
+Binance/detect_vol.py
 * Date: 2021. 10. 5.
 * Author: Jeon Won
 * Func: 바이낸스 차트 거래량이 급증했을 때 텔레그램 메시지 전송(판단기준: 현재 거래량이 (평균거래량 + 승수 * 표준편차) 이상일 때)
-* Usage: 15분봉 차트에 승수를 2로 하는 조사 명령어는 `python3 detect_vol_binance.py 15m 2` (1m, 3m, 5m, 15m, 30m, 1h, 4h, 6h, 12h, 1d 사용)
+* Usage: 15분봉 차트에 승수를 2로 하는 조사 명령어는 `python3 Binance/detect_vol.py 15m 2` (1m, 3m, 5m, 15m, 30m, 1h, 4h, 6h, 12h, 1d 사용)
 """
 
 load_dotenv()

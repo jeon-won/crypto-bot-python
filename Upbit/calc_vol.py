@@ -1,11 +1,11 @@
 import sys
 import pyupbit
 """
-calc_vol_upbit.py
+Upbit/calc_vol.py
 * Date: 2021. 10. 9.
 * Author: Jeon Won
 * Func: 업비트 거래량이 평소보다 높아졌다고 판단하기 위한 기준 계산 (판단기준: 평균거래량 + 승수*표준편차)
-* Usage: 비트코인에 승수를 2로 하는 조사 명령어는 `python calc_vol_upbit.py KRW-BTC 2`
+* Usage: 비트코인에 승수를 2로 하는 조사 명령어는 `python Upbit/calc_vol.py KRW-BTC 2`
 """
 
 

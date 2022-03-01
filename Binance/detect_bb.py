@@ -5,11 +5,11 @@ import telegram
 import sys
 
 """
-detect_bb_binance.py
+Binance/detect_bb.py
 * Date: 2021. 10. 5.
 * Author: Jeon Won
 * Func: 바이낸스 차트의 현재가가 볼린저 밴드 상단 또는 하단을 터치하는 캔들 발생 시 텔레그램 메시지 전송
-* Usage: 15분봉 차트 조사 명령어는 `python3 detect_bb_binance.py 15m` (1m, 3m, 5m, 15m, 30m, 1h, 4h, 6h, 12h, 1d 사용)
+* Usage: 15분봉 차트 조사 명령어는 `python3 Binance/detect_bb.py 15m` (1m, 3m, 5m, 15m, 30m, 1h, 4h, 6h, 12h, 1d 사용)
 """
 
 load_dotenv()
@@ -21,7 +21,11 @@ BB_COUNT = 20      # 볼린저 밴드 길이
 BB_MULTIPLIER = 2  # 볼린저 밴드에서 상하한선을 정하기 위해 사용하는 곱(승수)
 
 bot = telegram.Bot(TELEGRAM_TOKEN)
-tickers = ["BTC/USDT", "XRP/USDT", "ETH/USDT"]
+tickers = ["BTC/USDT", "ETH/USDT", "XRP/USDT", "SOL/USDT", "SAND/USDT", "BNB/USDT", "AXS/USDT", "ATOM/USDT", "DOGE/USDT", "EOS/USDT", 
+    "BCH/USDT",  "LTC/USDT", "ADA/USDT", "ETC/USDT", "LINK/USDT", "TRX/USDT", "DOT/USDT", "MATIC/USDT", "UNI/USDT", "ICP/USDT", 
+    "AAVE/USDT", "FIL/USDT", "XLM/USDT", "XTZ/USDT", "SUSHI/USDT", "THETA/USDT", "AVAX/USDT", "LUNA/USDT", "DASH/USDT", "SHIB/USDT", 
+    "XEM/USDT", "MANA/USDT", "GALA/USDT", "DYDX/USDT", "CRV/USDT", "NEAR/USDT", "EGLD/USDT", "KSM/USDT", "AR/USDT", "REN/USDT", 
+    "FTM/USDT"]
 alert_0_list = []  # 텔레그램 메시지 보낼 과매도 tickers 리스트
 alert_1_list = []  # 텔레그램 메시지 보낼 과매수 tickers 리스트
 

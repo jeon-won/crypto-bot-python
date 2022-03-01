@@ -4,14 +4,13 @@ from module_upbit import get_vol_top_tickers, get_pyupbit_bb
 import telegram
 import pyupbit
 import sys
-# import time
 
 """
-detect_bb_exceed_upbit.py
+Upbit/detect_bb_exceed_upbit.py
 * Date: 2022. 1. 23.
 * Author: Jeon Won
 * Func: 업비트 차트의 %B 0 값을 상향돌파 시 텔레그램 메시지 전송
-* Usage: 15분봉 기준 조사 명령어는 `python3 detect_bb_exceed_upbit.py minute15` (minute1~240, day 등 사용)
+* Usage: 15분봉 기준 조사 명령어는 `python3 Upbit/detect_bb_exceed.py minute15` (minute1~240, day 등 사용)
 """
 
 load_dotenv()

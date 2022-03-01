@@ -7,11 +7,11 @@ import sys
 # import time
 
 """
-detect_rsi_exceed_upbit.py
+Upbit/detect_rsi_exceed.py
 * Date: 2022. 1. 23.
 * Author: Jeon Won
-* Func: 업비트 차트의 과매도 기준 값을 상향돌파 시 텔레그램 메시지 전송
-* Usage: 15분봉 및 과매도 기준 30 조사 명령어는 `python3 detect_rsi_exceed_upbit.py minute15 30` (minute1~240, day 등 사용)
+* Func: 업비트 차트의 RSI 과매도 기준 값을 상향돌파 시 텔레그램 메시지 전송
+* Usage: 15분봉 및 과매도 기준 30 조사 명령어는 `python3 Upbit/detect_rsi_exceed.py minute15 30` (minute1~240, day 등 사용)
 """
 
 load_dotenv()
@@ -38,7 +38,7 @@ for ticker in tickers:
     current_rsi = get_pyupbit_rsi(current_df)  # 현재 기준 RSI
     
     # 직전 -> 현재 RSI값이 과매도 기준 값(OVERSOLD) 상향돌파 시 텔레그램 메시지 전송
-    if(prev_rsi < 30 and current_rsi > 30):
+    if(prev_rsi < OVERSOLD and current_rsi > OVERSOLD):
         alert_list.append(ticker)
 
     # time.sleep(0.1)  # 조사할 ticker 수가 많은 경우 API 호출 제한에 걸리지 않도록 해야 함

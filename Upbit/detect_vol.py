@@ -5,11 +5,11 @@ import telegram
 import pyupbit
 import module_upbit
 """
-detect_vol_upbit.py
+Upbit/detect_vol.py
 * Date: 2021. 10. 5.
 * Author: Jeon Won
 * Func: 업비트 차트 거래량이 급증했을 때 텔레그램 메시지 전송(판단기준: 현재 거래량이 (평균거래량 + 승수 * 표준편차) 이상일 때)
-* Usage: 15분봉 차트에 승수를 2로 하는 조사 명령어는 `python3 detect_vol_upbit.py minute15 2` (minute1~240, day 등 사용)
+* Usage: 15분봉 차트에 승수를 2로 하는 조사 명령어는 `python3 Upbit/detect_vol.py minute15 2` (minute1~240, day 등 사용)
 """
 
 load_dotenv()

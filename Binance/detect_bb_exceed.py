@@ -7,11 +7,11 @@ import ccxt
 import pandas as pd
 
 """
-detect_bb_exceed_binance.py
+Binance/detect_bb_exceed.py
 * Date: 2022. 1. 30.
 * Author: Jeon Won
 * Func: 바이낸스 차트의 %B 0 값을 상향돌파 또는 1 값을 하향돌파 시 텔레그램 메시지 전송
-* Usage: 15분봉 기준 조사 명령어는 `python3 detect_bb_exceed_binance.py minute15` (1m, 3m, 5m, 15m, 30m, 1h, 4h, 6h, 12h, 1d 사용)
+* Usage: 15분봉 기준 조사 명령어는 `python3 Binance/detect_bb_exceed.py 15m` (1m, 3m, 5m, 15m, 30m, 1h, 4h, 6h, 12h, 1d 사용)
 """
 
 load_dotenv()
@@ -55,7 +55,7 @@ for ticker in tickers:
     # 직전 -> 현재 %B값이 1을 하향돌파한 ticker를 텔레그램 메시지 보낼 ticker 리스트에 추가
     if(prev_per_b > 1 and current_per_b < 1):
         alert_1_list.append(ticker)
-
+    
 # 텔레그램 메시지 전송
 if alert_0_list:
     message = f"Binance {INTERVAL} 차트 볼린저밴드 %B 0 상향돌파 Tickers: {alert_0_list}"

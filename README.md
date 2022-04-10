@@ -12,6 +12,7 @@
 * python-telegram-bot: 텔레그램 메시지 전송을 위한 라이브러리
 * numpy 및 pandas: 배열 처리를 쉽게 하기 위한 라이브러리
 * python-dotenv: 환경변수(.env)를 사용하기 위한 라이브러리
+* playsound: 사운드 재생을 위한 라이브러리
 
 
 ## 사용법
@@ -46,7 +47,7 @@ UPBIT_SECRET_KEY = "uPbItSeCrEtKeY"  # 업비트 시크릿 키 (Upbit.stoploss_u
 * 바이낸스 15분봉 기준 조사 명령어는 `python3 Binance/detect_bb.py 15m` 입니다. 15m 대신 1m, 3m, 5m, 30m, 1h, 4h, 6h, 12h, 1d 등을 사용할 수 있습니다.
 
 ### detect_candle_15m.py
-* 바이낸스 15분봉 차트 캔들 크기(시가와 종가의 차이)가 평균 크기 이상일 때 텔레그램 메시지를 전송합니다.
+* 바이낸스 15분봉 차트 캔들 크기(시가와 종가의 차이)가 평균 크기 이상일 때 텔레그램 메시지를 전송하거나 사운드를 재생합니다.
 * 실행 명령어는 `python3 Binance/detect_candle_15m.py` 입니다. 
 * 무한루프로 작동하기 떄문에 cron에 등록하여 사용하면 안 됩니다.
 
@@ -74,7 +75,7 @@ UPBIT_SECRET_KEY = "uPbItSeCrEtKeY"  # 업비트 시크릿 키 (Upbit.stoploss_u
 * 업비트 15분봉 기준 조사 명령어는 `python3 Upbit/detect_bb.py minute15` 입니다. minute15 대신 minute1, minute3, minute5, minute30, minute60, minute240 day 등을 사용할 수 있습니다.
 
 ### detect_candle_15m.py
-* 업비트 15분봉 차트 캔들 크기(시가와 종가의 차이)가 평균 크기 이상일 때 텔레그램 메시지를 전송합니다.
+* 업비트 15분봉 차트 캔들 크기(시가와 종가의 차이)가 평균 크기 이상일 때 텔레그램 메시지를 전송하거나 사운드를 재생합니다.
 * 실행 명령어는 `python3 Upbit/detect_candle_15m.py` 입니다. 
 * 무한루프로 작동하기 때문에 cron에 등록하여 사용하면 안 됩니다.
 

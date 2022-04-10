@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from playsound import playsound
 import numpy as np
 import os
 import time
@@ -15,10 +16,12 @@ Binance/detect_candle_15m.py
 
 load_dotenv()
 
-INTERVAL = "15m"  # 15분봉 조사
-COUNT = 96        # 캔들 몇개를 조사할 것인가?
-MULTIPLIER = 3    # 평균 캔들 크기의 몇 배일 때 알림을 보낼 것인가?
-SLEEP_TIME = 0.1  # 다음 ticker 조사하기 전 쉬는 시간(초)
+INTERVAL = "15m"   # 15분봉 조사
+COUNT = 96         # 캔들 몇개를 조사할 것인가?
+MULTIPLIER = 3     # 평균 캔들 크기의 몇 배일 때 알림을 보낼 것인가?
+SLEEP_TIME = 0.1   # 다음 ticker 조사하기 전 쉬는 시간(초)
+ALARM_TELEGRAM = False  # 텔레그램 메시지 전송 여부
+ALARM_SOUND = True      # 알림 사운드 재생 여부
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")      # 텔레그렘 봇 토큰
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")  # 텔레그램 봇 아이디
 
@@ -48,17 +51,24 @@ while True:
             current_close = ohlcvs[len(ohlcvs)-1][4]
             current_abs_oc = abs(current_open - current_close)  # 현재 캔들 크기
 
-            # 현재 캔들 크기가 평균 캔들 크기의 MULTIPLIER배 이상이면 텔레그램 메시지 전송
-            if(current_abs_oc >= avg_oc * MULTIPLIER and notified_tickers.count(ticker) == 0):
+            # 현재 캔들 크기가 평균 캔들 크기의 MULTIPLIER배 이상이면 
+            # 사운드 재생
+            if(current_abs_oc >= avg_oc * MULTIPLIER and notified_tickers.count(ticker) == 0 and ALARM_SOUND):
                 notified_tickers.append(ticker)
-                message = f"Binance {INTERVAL} 차트 캔들 크기 평균 이상 Ticker: {ticker}"
+                print(f"Binance {INTERVAL} 차트 캔들 크기 평균 {MULTIPLIER}배 이상 Ticker: {ticker}")
+                playsound('/Users/jeonwon/Code/crypto-bot-python/alarm.mp3')
+
+            # 텔레그램 메시지 전송
+            if(current_abs_oc >= avg_oc * MULTIPLIER and notified_tickers.count(ticker) == 0 and ALARM_TELEGRAM):
+                notified_tickers.append(ticker)
+                message = f"Binance {INTERVAL} 차트 캔들 크기 평균 {MULTIPLIER}배 이상 Ticker: {ticker}"
                 bot.sendMessage(TELEGRAM_CHAT_ID, text=message)
 
             # 봉 마다 한 번 알림이 오도록 0, 15, 30, 45분마다 notified_tickers 초기화
             now = datetime.datetime.now()
             mod = divmod(now.minute, 15)[1]
             is_multiple_15 = True if mod == 0 else False
-            if(is_multiple_15 and now.second < 5):
+            if(is_multiple_15 and now.second > 5 and now.second < 10):
                 notified_tickers.clear()
 
             time.sleep(SLEEP_TIME)
